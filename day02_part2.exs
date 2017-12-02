@@ -15,10 +15,7 @@ defmodule D02P2 do
   defp divide([]), do: 0
   defp divide(numbers) do
     for a <- numbers, b <- numbers do
-      case rem(a, b) do
-        0 -> div(a, b)
-        _ -> 0
-      end
+      if rem(a, b) == 0, do: div(a, b), else: 0
     end
     |> Enum.max
   end
