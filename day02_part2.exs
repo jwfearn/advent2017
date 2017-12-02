@@ -1,23 +1,20 @@
 defmodule D02P2 do
-  def checksum(sheet) do
-    sheet
+  def checksum(lines) do
+    lines
     |> String.split("\n")
     |> Enum.map(&divide/1)
     |> Enum.sum
   end
 
-  defp divide(s) when is_binary(s) do
-    s
+  defp divide(line) when is_binary(line) do
+    line
     |> String.split
     |> Enum.map(&String.to_integer/1)
     |> divide
   end
   defp divide([]), do: 0
   defp divide(numbers) do
-    for a <- numbers, b <- numbers, a > b, rem(a, b) == 0 do
-      div(a, b)
-    end
-    |> hd
+    hd(for a <- numbers, b <- numbers, a > b, rem(a, b) == 0, do: div(a, b))
   end
 end
 
