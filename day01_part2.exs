@@ -1,7 +1,8 @@
 defmodule Part2 do
+  require Integer
   def sum(n) when is_integer(n), do: n |> Integer.digits |> sum
-  def sum(digits) do
-    half = digits |> Enum.count |> div(2)
+  def sum(digits) when digits |> length |> Integer.is_even do
+    half = digits |> length |> div(2)
     digits
     |> Enum.split(half)
     |> Tuple.to_list
