@@ -36,4 +36,3 @@ defmodule D01P1Test do
     assert 1171 == actual
   end
 end
-

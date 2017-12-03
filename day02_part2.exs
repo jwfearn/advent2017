@@ -56,5 +56,3 @@ defmodule D02P2Test do
     assert 236 == actual
   end
 end
-
-

@@ -57,5 +57,3 @@ defmodule D02P1Test do
     assert 32020 == actual
   end
 end
-
-
