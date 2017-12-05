@@ -1,19 +1,39 @@
 defmodule D05 do
+  defmodule ArrayBehaviour do
+    @type array_t :: any
+    @type value_t :: any
+    @callback make(list(value_t)) :: array_t
+    @callback get(array_t, integer) :: array_t | :error
+    @callback put(array_t, integer, value_t) :: array_t
+  end
+
+  defmodule TupleArray do
+    @behaviour ArrayBehaviour
+    def make(enum), do: enum |> Enum.reduce({}, &Tuple.append(&2, &1))
+    def get(array, idx) when idx < 0 or idx >= tuple_size(array), do: :error
+    def get(array, idx), do: array |> elem(idx)
+    def put(array, idx, v), do: array |> put_elem(idx, v)
+  end
+
+  alias TupleArray, as: Array
+
   def escape_strange(lines), do: escape(lines, &strange/1)
 
   def escape(lines, fun \\ & &1 + 1) when is_binary(lines) do
     lines
     |> String.split
-    |> Enum.reduce({}, &Tuple.append(&2, String.to_integer(&1)))
+    |> Enum.map(&String.to_integer/1)
+    |> Array.make
     |> escape(0, 0, fun)
   end
-  
-  defp escape(tuple, cnt, pc, _) when pc >= tuple_size(tuple), do: cnt
-  defp escape(tuple, cnt, pc, fun) do
-    jump = tuple |> elem(pc)
-    tuple
-    |> put_elem(pc, fun.(jump))
-    |> escape(cnt + 1, pc + jump, fun)
+
+  defp escape(array, cnt, pc, fun) do
+    case Array.get(array, pc) do
+      :error ->
+        cnt
+      jump ->
+        array |> Array.put(pc, fun.(jump)) |> escape(cnt + 1, pc + jump, fun)
+    end
   end
 
   defp strange(n) when n >= 3, do: n - 1
