@@ -10,7 +10,7 @@ defmodule D04 do
   defp valid?("", _), do: false
   defp valid?(line, fun) do
     words = line |> String.split
-    length(words) == length(Enum.uniq(words, fun))
+    length(words) == length(Enum.uniq_by(words, fun))
   end
 end
 
