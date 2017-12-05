@@ -1,10 +1,11 @@
 defmodule D05 do
   defmodule ArrayBehaviour do
     @type array_t :: any
+    @type idx_t :: integer
     @type value_t :: any
-    @callback make(list(value_t)) :: array_t
-    @callback get(array_t, integer) :: array_t | :error
-    @callback put(array_t, integer, value_t) :: array_t
+    @callback make(Enumerable.t) :: array_t
+    @callback get(array_t, idx_t) :: array_t | :error
+    @callback put(array_t, idx_t, value_t) :: array_t
   end
 
   defmodule TupleArray do
