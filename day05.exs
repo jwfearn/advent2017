@@ -15,7 +15,19 @@ defmodule D05 do
     def put(array, idx, v), do: array |> put_elem(idx, v)
   end
 
-  alias TupleArray, as: Array
+  defmodule MapArray do
+    @behaviour ArrayBehaviour
+    def make(enum) do
+      enum
+      |> Enum.with_index
+      |> Enum.into(%{}, fn {v, idx} -> {idx, v} end)
+    end
+    def get(array, idx) when idx < 0 or idx >= map_size(array), do: :error
+    def get(array, idx), do: array[idx]
+    def put(array, idx, v), do: %{array | idx => v}
+  end
+
+  alias MapArray, as: Array
 
   def escape_strange(lines), do: escape(lines, &strange/1)
 
@@ -32,7 +44,9 @@ defmodule D05 do
       :error ->
         cnt
       jump ->
-        array |> Array.put(pc, fun.(jump)) |> escape(cnt + 1, pc + jump, fun)
+        array
+        |> Array.put(pc, fun.(jump))
+        |> escape(cnt + 1, pc + jump, fun)
     end
   end
 
