@@ -26,8 +26,10 @@ defmodule D05Test do
 
   test "case 1", do: assert D05.escape("0 3 0 1 -3") == 5
   test "case 2", do: assert D05.escape("0 3 0 1 -3", &D05.strange/1) == 10
+  test "part 1", do: assert D05.escape(input()) == 326_618
+  test "part 2", do: assert D05.escape(input(), &D05.strange/1) == 21_841_249
 
-  @input """
+  def input, do: """
     1
     2
     0
@@ -1032,7 +1034,4 @@ defmodule D05Test do
     -216
     -477
   """
-
-  test "part 1", do: assert D05.escape(@input) == 326_618
-  test "part 2", do: assert D05.escape(@input, &D05.strange/1) == 21_841_249
 end
