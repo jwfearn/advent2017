@@ -3,14 +3,14 @@ defmodule D05 do
     @type array_t :: any
     @type idx_t :: integer
     @type value_t :: any
-    @callback make(Enumerable.t) :: array_t
+    @callback new(Enumerable.t) :: array_t
     @callback get(array_t, idx_t) :: array_t | :error
     @callback put(array_t, idx_t, value_t) :: array_t
   end
 
   defmodule TupleArray do
     @behaviour ArrayBehaviour
-    def make(enum), do: enum |> Enum.reduce({}, &Tuple.append(&2, &1))
+    def new(enum), do: enum |> Enum.reduce({}, &Tuple.append(&2, &1))
     def get(array, idx) when idx < 0 or idx >= tuple_size(array), do: :error
     def get(array, idx), do: array |> elem(idx)
     def put(array, idx, v), do: array |> put_elem(idx, v)
@@ -18,7 +18,7 @@ defmodule D05 do
 
   defmodule MapArray do
     @behaviour ArrayBehaviour
-    def make(enum) do
+    def new(enum) do
       enum
       |> Enum.with_index
       |> Enum.into(%{}, fn {v, idx} -> {idx, v} end)
@@ -36,7 +36,7 @@ defmodule D05 do
     lines
     |> String.split
     |> Enum.map(&String.to_integer/1)
-    |> Array.make
+    |> Array.new
     |> escape(0, 0, fun)
   end
 
