@@ -1,31 +1,37 @@
 defmodule D05 do
-  defmodule ArrayBehaviour do
+  defmodule FixedLengthArrayBehaviour do
     @type array_t :: any
     @type idx_t :: integer
     @type value_t :: any
     @callback new(Enumerable.t) :: array_t
-    @callback get(array_t, idx_t) :: array_t | :error
-    @callback put(array_t, idx_t, value_t) :: array_t
+    @callback get(array_t, idx_t) :: value_t | :error
+    @callback replace(array_t, idx_t, value_t) :: array_t
   end
 
-  defmodule TupleArray do
-    @behaviour ArrayBehaviour
+  defmodule ListArray do # Test time: about 4 minutes
+    @behaviour FixedLengthArrayBehaviour
+    def new(enum), do: Enum.into(enum, [])
+    def get(array, idx), do: array |> Enum.at(idx, :error)
+    def replace(array, idx, v), do: array |> List.replace_at(idx, v)
+  end
+
+  defmodule TupleArray do # Test time: about 18 seconds
+    @behaviour FixedLengthArrayBehaviour
     def new(enum), do: enum |> Enum.reduce({}, &Tuple.append(&2, &1))
     def get(array, idx) when idx < 0 or idx >= tuple_size(array), do: :error
     def get(array, idx), do: array |> elem(idx)
-    def put(array, idx, v), do: array |> put_elem(idx, v)
+    def replace(array, idx, v), do: array |> put_elem(idx, v)
   end
 
-  defmodule MapArray do
-    @behaviour ArrayBehaviour
+  defmodule MapArray do # Test time: about 7 seconds
+    @behaviour FixedLengthArrayBehaviour
     def new(enum) do
       enum
       |> Enum.with_index
       |> Enum.into(%{}, fn {v, idx} -> {idx, v} end)
     end
-    def get(array, idx) when idx < 0 or idx >= map_size(array), do: :error
-    def get(array, idx), do: array[idx]
-    def put(array, idx, v), do: %{array | idx => v}
+    def get(array, idx), do: array |> Map.get(idx, :error)
+    def replace(array, idx, v), do: array |> Map.replace!(idx, v)
   end
 
   alias MapArray, as: Array
@@ -46,7 +52,7 @@ defmodule D05 do
         cnt
       jump ->
         array
-        |> Array.put(pc, fun.(jump))
+        |> Array.replace(pc, fun.(jump))
         |> escape(cnt + 1, pc + jump, fun)
     end
   end
@@ -55,7 +61,7 @@ defmodule D05 do
   defp strange(n), do: n + 1
 end
 
-ExUnit.start()
+ExUnit.start(timeout: 300_000)
 
 defmodule D05Test do
   use ExUnit.Case
