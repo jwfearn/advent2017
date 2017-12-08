@@ -66,10 +66,10 @@ ExUnit.start(timeout: 300_000)
 defmodule D05Test do
   use ExUnit.Case
 
-  test "case 1", do: assert D05.escape("0 3 0 1 -3") == 5
-  test "case 2", do: assert D05.escape_strange("0 3 0 1 -3") == 10
-  test "part 1", do: assert D05.escape(input()) == 326_618
-  test "part 2", do: assert D05.escape_strange(input()) == 21_841_249
+  test "1", do: assert D05.escape("0 3 0 1 -3") == 5
+  test "2", do: assert D05.escape_strange("0 3 0 1 -3") == 10
+  test "3", do: assert D05.escape(input()) == 326_618
+  test "4", do: assert D05.escape_strange(input()) == 21_841_249
 
   defp input do
     """
